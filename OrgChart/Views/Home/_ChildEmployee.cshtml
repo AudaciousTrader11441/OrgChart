@@ -1,0 +1,5 @@
+﻿@model IEnumerable<OrgChart.Models.Employee>
+@foreach(OrgChart.Models.Employee employee in Model)
+{
+    @Html.Partial("_RootEmployee", employee)
+}
