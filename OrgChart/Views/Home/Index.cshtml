@@ -5,12 +5,46 @@
 
 }
 
-<div class="panel">
-    <div class="panel-heading">
+<div id="container" class="panel">
+    <div class="root">
         @Html.Partial("_RootEmployee", root)
     </div>
-    <div class="panel-body">
+    <div class="child_pannel">
         @Html.Partial("_ChildEmployee", child)
     </div>
 
 </div>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script>
+    $(document).ready(function () {
+        $('p[data-id]').click(function () {
+            var s = $(this).data("id");
+            var auri = '/Home/GetSubEmployee/id=' + s;
+            var divreplace = 'div[data-id=' + s + ']';
+            $.ajax({
+                type: 'POST',
+                url: '/Home/GetSubEmployee/',
+                data: 'id='+s ,
+                success: function (result) {
+                    alert(result);
+                    $(divreplace).html(result);
+                }
+            })
+            alert(s);
+        }
+        );
+
+
+    })
+    window.addEventListener('load', function () {
+        linemate.confine('#container');
+        var branchOptions = {
+            color: '#ff3300',
+            path: 'square-v',
+            width: 5
+        };
+        linemate.connect(['.root', '.child'], branchOptions);
+    })
+</script>

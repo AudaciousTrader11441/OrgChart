@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<OrgChart.Models.Employee>
-@foreach(OrgChart.Models.Employee employee in Model)
+@foreach (OrgChart.Models.Employee employee in Model)
 {
-    @Html.Partial("_RootEmployee", employee)
+    <div class="child" data-id="@employee.Id">
+        @Html.Partial("_Employee", employee)
+    </div>
 }

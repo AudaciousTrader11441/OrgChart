@@ -1,8 +1,6 @@
 ﻿@model OrgChart.Models.Employee
 
-
-
-    <h1>
+    <h1 >
         @Html.DisplayFor(model => model.Name)
     </h1>
 
@@ -19,8 +17,11 @@
     </p>
     @if (Model.Reporties != 0)
     {
-        <p class="bottom-right">
+        <p class="bottom-right" data-id="@Model.Id">
             @Html.DisplayFor(model => model.Reporties)
         </p>
     }
+    @Html.HiddenFor(model=>model.Id)
+
+
 

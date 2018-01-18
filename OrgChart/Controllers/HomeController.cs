@@ -29,18 +29,16 @@ namespace OrgChart.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult GetSubEmployee(int id= 10866)
         {
-            ViewBag.Message = "Your application description page.";
+            Employee root = SqlDb.GetEmployeeDetails(id);
+            List<Employee> child = SqlDb.GetListSubordinates(id);
+            ViewBag.root = root;
+            ViewBag.child = child;
+            return PartialView("_subEmployee", child);
 
-            return View();
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
 
-            return View();
-        }
     }
 }

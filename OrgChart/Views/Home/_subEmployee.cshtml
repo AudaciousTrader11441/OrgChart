@@ -1,0 +1,15 @@
+﻿@{
+    OrgChart.Models.Employee root = ViewBag.root;
+    List<OrgChart.Models.Employee> child = ViewBag.child;
+
+}
+
+<div id="container" class="panel">
+    <div class="root">
+        @Html.Partial("_RootEmployee", root)
+    </div>
+    <div class="child_pannel">
+        @Html.Partial("_ChildEmployee", child)
+    </div>
+
+</div>
