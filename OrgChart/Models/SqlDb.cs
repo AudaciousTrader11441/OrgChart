@@ -64,6 +64,7 @@ namespace OrgChart.Models
 
 
         }
+        //Child
         public static List<Employee> GetListSubordinates(int managerId)
         {
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SqlDB"].ConnectionString);
@@ -81,5 +82,68 @@ namespace OrgChart.Models
 
 
         }
+        //sibling
+        public static List<Employee> GetSiblings(int employeeId)
+        {
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SqlDB"].ConnectionString);
+            using (con)
+            {
+                DataSet ds = new DataSet();
+                SqlCommand cmd = new SqlCommand("sp_sibling", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Employee_id",employeeId));
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+                return ds.Tables[0].ToList<Employee>();
+
+            }
+
+
+        }
+        //Manager
+        public static Employee GetManagerDetails(int employeeId)
+        {
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SqlDB"].ConnectionString);
+            Employee result = new Employee();
+            con.Open();
+            SqlCommand cmd = new SqlCommand("sp_manager", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@Employee_id", employeeId));
+            SqlDataReader reader = cmd.ExecuteReader();
+            reader.Read();
+            result.Id = (int)reader[0];
+            result.Name = (string)reader[1];
+            result.Role = (string)reader[2];
+            result.WorkLocation = (string)reader[3];
+            result.DepartmentName = (string)reader[4];
+            result.Reporties = (int)reader[5];
+            con.Close();
+            return result;
+
+
+        }
+        //init
+        public static Employee GetInit()
+        {
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SqlDB"].ConnectionString);
+            Employee result = new Employee();
+            con.Open();
+            SqlCommand cmd = new SqlCommand("sp_Init", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            SqlDataReader reader = cmd.ExecuteReader();
+            reader.Read();
+            result.Id = (int)reader[0];
+            result.Name = (string)reader[1];
+            result.Role = (string)reader[2];
+            result.WorkLocation = (string)reader[3];
+            result.DepartmentName = (string)reader[4];
+            result.Reporties = (int)reader[5];
+            con.Close();
+            return result;
+
+
+        }
+
+
     }
 }
