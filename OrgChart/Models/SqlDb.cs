@@ -48,17 +48,18 @@ namespace OrgChart.Models
             SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SqlDB"].ConnectionString);
             Employee result = new Employee();
             con.Open();
-                SqlCommand cmd = new SqlCommand("sp_employee_details", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@Employee_id", id));
-                SqlDataReader reader = cmd.ExecuteReader();
-                reader.Read();
-                result.Id= (int)reader[0];
-                result.Name = (string)reader[1];
-                result.Role = (string)reader[2];
-                result.WorkLocation = (string)reader[3];
-                result.DepartmentName = (string)reader[4];
-                result.Reporties = (int)reader[5];
+            SqlCommand cmd = new SqlCommand("sp_employee_details", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@Employee_id", id));
+            SqlDataReader reader = cmd.ExecuteReader();
+            reader.Read();
+            result.Id = (int)reader[0];
+            result.Name = (string)reader[1];
+            result.Role = (string)reader[2];
+            result.WorkLocation = (string)reader[3];
+            result.DepartmentName = (string)reader[4];
+            result.Reporties = (int)reader[5];
+            result.relationship = (string)reader[6];
             con.Close();
             return result;
 
@@ -71,9 +72,9 @@ namespace OrgChart.Models
             using (con)
             {
                 DataSet ds = new DataSet();
-                SqlCommand cmd = new SqlCommand("sp_reporting_employee_details", con);
+                SqlCommand cmd = new SqlCommand("sp_child", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@Manager_id", managerId));
+                cmd.Parameters.Add(new SqlParameter("@Employee_id", managerId));
                 SqlDataAdapter sda = new SqlDataAdapter(cmd);
                 sda.Fill(ds);
                 return ds.Tables[0].ToList<Employee>();
@@ -91,7 +92,7 @@ namespace OrgChart.Models
                 DataSet ds = new DataSet();
                 SqlCommand cmd = new SqlCommand("sp_sibling", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@Employee_id",employeeId));
+                cmd.Parameters.Add(new SqlParameter("@Employee_id", employeeId));
                 SqlDataAdapter sda = new SqlDataAdapter(cmd);
                 sda.Fill(ds);
                 return ds.Tables[0].ToList<Employee>();
@@ -117,6 +118,7 @@ namespace OrgChart.Models
             result.WorkLocation = (string)reader[3];
             result.DepartmentName = (string)reader[4];
             result.Reporties = (int)reader[5];
+            result.relationship = (string)reader[6];
             con.Close();
             return result;
 
@@ -138,6 +140,7 @@ namespace OrgChart.Models
             result.WorkLocation = (string)reader[3];
             result.DepartmentName = (string)reader[4];
             result.Reporties = (int)reader[5];
+            result.relationship = (string)reader[6];
             con.Close();
             return result;
 

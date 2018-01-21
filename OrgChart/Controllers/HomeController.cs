@@ -26,16 +26,17 @@ namespace OrgChart.Controllers
         public ActionResult GetSubEmployee(int id= 10866)
         {
             List<Employee> child = SqlDb.GetListSubordinates(id);
-           string s= JsonConvert.SerializeObject(child);
-            return Json(s, JsonRequestBehavior.AllowGet);
+            var children = new { children = child };
+           //string s= JsonConvert.SerializeObject(child);
+            return Json(children, JsonRequestBehavior.AllowGet);
             //return PartialView("_subEmployee", child);
 
         }
-        public ActionResult GetManager(int id = 10866)
+        public JsonResult GetManager(int id = 11285)
         {
             Employee root = SqlDb.GetManagerDetails(id);
-            string s = JsonConvert.SerializeObject(root);
-            return Json(s, JsonRequestBehavior.AllowGet);
+            //string s = JsonConvert.SerializeObject(root);
+            return Json(root, JsonRequestBehavior.AllowGet);
             //return PartialView("_subEmployee", child);
 
         }
@@ -43,17 +44,53 @@ namespace OrgChart.Controllers
         public ActionResult GetSibling(int id = 10866)
         {
             List<Employee> child = SqlDb.GetSiblings(id);
-            string s = JsonConvert.SerializeObject(child);
-            return Json(s, JsonRequestBehavior.AllowGet);
+            //string s = JsonConvert.SerializeObject(child);
+            var siblings = new { siblings = child };
+            return Json(siblings, JsonRequestBehavior.AllowGet);
             //return PartialView("_subEmployee", child);
 
         }
 
-        public ActionResult Init()
+        public JsonResult Init()    
         {
-            Employee root = SqlDb.GetInit();
+            //Employee root = SqlDb.GetInit();
             //string s = JsonConvert.SerializeObject(root);
-            return Json(root, JsonRequestBehavior.AllowGet);
+            Employee root = SqlDb.GetEmployeeDetails(10866);
+            List<Employee> child = SqlDb.GetListSubordinates(10866);
+            var family = new
+            {
+                Id = root.Id,
+                Name = root.Name,
+                Role = root.Role,
+                WorkLocation = root.WorkLocation,
+                DepartmentName = root.DepartmentName,
+                Reporties = root.Reporties,
+                relationship = root.relationship,
+                children = child
+            };
+
+
+            return Json(family, JsonRequestBehavior.AllowGet);
+            //return PartialView("_subEmployee", child);
+
+        }
+
+        public JsonResult GetFamily(int id= 10866)
+        {
+            Employee root = SqlDb.GetManagerDetails(id);
+            List<Employee> child = SqlDb.GetSiblings(id);
+            var family = new
+            { Id=root.Id,
+            Name=root.Name, 
+            Role=root.Role, 
+            WorkLocation=root.WorkLocation, 
+            DepartmentName=root.DepartmentName, 
+            Reporties=root.Reporties, 
+            relationship=root.relationship,
+            children = child
+            };
+            //string s = JsonConvert.SerializeObject(root);
+            return Json(family, JsonRequestBehavior.AllowGet);
             //return PartialView("_subEmployee", child);
 
         }

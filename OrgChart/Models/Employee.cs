@@ -22,6 +22,8 @@ namespace OrgChart.Models
         
         [JsonProperty]
         public int Reporties { get; set; }
+        [JsonProperty]
+        public string relationship { get; set; }
 
     }
 

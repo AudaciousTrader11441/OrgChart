@@ -18,9 +18,20 @@
       `;
         };
 
+        var ajaxURLs = {
+            'children':'/Home/GetSubEmployee/',
+            'parent': '/Home/GetManager/',
+            'siblings':'/Home/GetSibling/',
+            'families':'/Home/GetFamily/' 
+            
+        };
+
         $('#chart-container').orgchart({
             'data': '/Home/Init',
-            'nodeTemplate': nodeTemplate
+            'nodeTemplate': nodeTemplate,
+            'ajaxURL': ajaxURLs,
+            'nodeId': "Id",
+            'nodeTitle':"Name"
         });
 
   });
