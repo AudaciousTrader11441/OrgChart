@@ -61,7 +61,7 @@ select EmployeeId as Id ,CONCAT(FirstName,' ', MiddleName,' ', LastName) as Name
 RoleName as Role,WorkLocation, Department_name as DepartmentName,
  dbo.fn_countofsub(EmployeeId) as Reporties
  ,right('000'+cast(dbo.fn_relationship(EmployeeId) as varchar(3)),3) as relationship
-  from Employee where ManagerEmployeeCode=(select ManagerEmployeeCode from Employee where EmployeeId=@Employee_id) and Active = 'True'and RoleName<>'CEO'
+  from Employee where ManagerEmployeeCode=(select ManagerEmployeeCode from Employee where EmployeeId=@Employee_id) and Active = 'True'and RoleName<>'CEO' and EmployeeId<>@Employee_id
 end
 --child
 alter procedure sp_child

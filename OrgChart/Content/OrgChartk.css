@@ -5,13 +5,13 @@
     border-color: #F1F1F1;
     position: relative;
     padding: 21px;
-    width: fit-content;
+    width: 200px;
     border-radius: 6%;
     font-size: 90%;
     font-family: Arial;
     margin: AUTO;
     TEXT-ALIGN: CENTER;
-    height: 150px;
+    height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

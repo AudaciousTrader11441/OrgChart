@@ -13,8 +13,19 @@
         var nodeTemplate = function (data) {
             return `
         
-        <div class="title">${data.Name}</div>
-        <div class="content">${data.Reporties}</div>
+       
+<div class="root" >
+<h1>${data.Name}</h1>
+ <p>${data.Role}</p>
+    <p>${data.WorkLocation}</p>
+    <p>${data.DepartmentName}</p>
+
+    <p class="bottom-right">${data.Reporties}</p>
+   
+</div>
+
+
+
       `;
         };
 
@@ -31,7 +42,7 @@
             'nodeTemplate': nodeTemplate,
             'ajaxURL': ajaxURLs,
             'nodeId': "Id",
-            'nodeTitle':"Name"
+            'nodeTitle': "Name"
         });
 
   });
