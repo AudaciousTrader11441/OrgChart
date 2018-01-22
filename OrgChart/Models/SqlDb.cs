@@ -147,6 +147,25 @@ namespace OrgChart.Models
 
         }
 
+        public static List<Employee> GetAllEmployee()
+        {
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SqlDB"].ConnectionString);
+            using (con)
+            {
+                DataSet ds = new DataSet();
+                SqlCommand cmd = new SqlCommand("sp_all_employee_details", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+               List<Employee> res= ds.Tables[0].ToList<Employee>();
+                return res;
+
+            }
+
+
+        }
+
 
     }
 }

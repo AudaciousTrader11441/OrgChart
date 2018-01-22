@@ -776,7 +776,6 @@
             var $topEdge = $(event.target);
             var $node = $(event.delegateTarget);
             var parentState = this.getNodeState($node, 'parent');
-            debugger;
             if (parentState.exist) {
                 var $parent = $node.closest('table').closest('tr').siblings(':first').find('.node');
                 if ($parent.is('.sliding')) { return; }
@@ -795,7 +794,6 @@
                     this.loadNodes('parent', url, $topEdge);
                 }
             }
-            debugger;
         },
         //
         bottomEdgeClickHandler: function (event) {
@@ -1125,7 +1123,6 @@
             if (nodeData.children) {
                 $.each(nodeData.children, function (index, child) {
                     child.parentId = nodeData.id;
-                    debugger;
                 });
             }
             var dtd = $.Deferred();

@@ -4,37 +4,65 @@
 }
 
 <h2>Index</h2>
+<button id="btnRecenter">Recenter</button>
+<input type="text" id="SearchName" placeholder="Search Name"/>
 <div id="chart-container"></div>
 
 @Scripts.Render("~/bundles/jquery")
 <script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#btnRecenter').click(function () {
+            var chart = $('.orgchart');
+            var posX = chart.width() > chart.parent('div').width() ? -(chart.width() / 2) : '0';
+            chart.css('transform', 'matrix(1, 0, 0, 1, ' + posX + ', 0)');
+        });
+     
+        $("#SearchName").autocomplete({
+            source: function (request, response) {
+                alert("auto");
+                $.ajax({
+                    url: "/Home/Autocomplet",
+                    type: "POST",
+                    dataType: "json",
+                    data: { prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Name, value: item.Name };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+    });
+
+
     $(function () {
-        
+
         var nodeTemplate = function (data) {
             return `
-        
-       
 <div class="root" >
-<h1>${data.Name}</h1>
- <p>${data.Role}</p>
-    <p>${data.WorkLocation}</p>
-    <p>${data.DepartmentName}</p>
+  <h1>${data.Name}</h1>
+   <p>${data.Role}</p>
+      <p>${data.WorkLocation}</p>
+      <p>${data.DepartmentName}</p>
 
-    <p class="bottom-right">${data.Reporties}</p>
-   
-</div>
+      <p class="bottom-right">${data.Reporties}</p>
 
-
-
-      `;
+  </div>
+`;
         };
 
         var ajaxURLs = {
-            'children':'/Home/GetSubEmployee/',
+            'children': '/Home/GetSubEmployee/',
             'parent': '/Home/GetManager/',
-            'siblings':'/Home/GetSibling/',
-            'families':'/Home/GetFamily/' 
-            
+            'siblings': '/Home/GetSibling/',
+            'families': '/Home/GetFamily/'
+
         };
 
         $('#chart-container').orgchart({
@@ -42,8 +70,13 @@
             'nodeTemplate': nodeTemplate,
             'ajaxURL': ajaxURLs,
             'nodeId': "Id",
-            'nodeTitle': "Name"
+            'nodeTitle': "Name",
+            'zoom': 'true',
+            'pan': 'true',
+            'verticalDepth': 3, // From the 3th level of orgchart, nodes will be aligned vertically.
+            'depth': 4
+
         });
 
-  });
+    });
 </script>

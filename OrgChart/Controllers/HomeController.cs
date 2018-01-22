@@ -10,12 +10,14 @@ using OrgChart.Models;
 
 namespace OrgChart.Controllers
 {
-    
+
     public class HomeController : Controller
     {
+        List<Employee> emp = new List<Employee>();
+        
         public ActionResult Index()
         {
-
+            
             Employee root=SqlDb.GetEmployeeDetails(11285);
             List<Employee> child = SqlDb.GetListSubordinates(11285);
             ViewBag.root = root;
@@ -95,7 +97,14 @@ namespace OrgChart.Controllers
 
         }
 
-
+        public JsonResult Autocomplet(string prefix="sri")
+        {
+            emp = SqlDb.GetAllEmployee();
+            var name = (from N in emp
+                        where N.Name.Contains(prefix)
+                        select new { Name=N.Name });
+            return Json(name, JsonRequestBehavior.AllowGet);
+        }
 
 
     }
