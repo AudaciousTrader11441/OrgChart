@@ -27,4 +27,11 @@ namespace OrgChart.Models
 
     }
 
+    public class EmployeeSearch
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+    }
+
 }

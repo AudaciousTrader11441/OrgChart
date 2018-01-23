@@ -15,13 +15,18 @@ namespace OrgChart.Controllers
     {
         List<Employee> emp = new List<Employee>();
         
+        public ActionResult search(string searchTerm = "sri")
+        {
+            List<Employee> Employee = SqlDb.GetAllEmployee();
+            var lable = Employee.Where(r=>r.Name.ToLower().Contains(searchTerm.ToLower())).Select(r => new EmployeeSearch { Name = r.Name,Id=r.Id });
+            //return Json(lable, JsonRequestBehavior.AllowGet);
+            return PartialView("_Search", lable);
+        }
+
+
         public ActionResult Index()
         {
             
-            Employee root=SqlDb.GetEmployeeDetails(11285);
-            List<Employee> child = SqlDb.GetListSubordinates(11285);
-            ViewBag.root = root;
-            ViewBag.child = child;
             return View();
         }
 
@@ -53,12 +58,12 @@ namespace OrgChart.Controllers
 
         }
 
-        public JsonResult Init()    
+        public JsonResult Init(int id= 10866)    
         {
             //Employee root = SqlDb.GetInit();
             //string s = JsonConvert.SerializeObject(root);
-            Employee root = SqlDb.GetEmployeeDetails(10866);
-            List<Employee> child = SqlDb.GetListSubordinates(10866);
+            Employee root = SqlDb.GetEmployeeDetails(id);
+            List<Employee> child = SqlDb.GetListSubordinates(id);
             var family = new
             {
                 Id = root.Id,

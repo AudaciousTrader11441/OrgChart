@@ -4,79 +4,121 @@
 }
 
 <h2>Index</h2>
-<button id="btnRecenter">Recenter</button>
-<input type="text" id="SearchName" placeholder="Search Name"/>
-<div id="chart-container"></div>
+<div class="row">
+    <div class="col-md-3">
+        <input id="searchTerm" type="text" name="searchTerm" action="@Url.Action("Index")" data-orgchart-ajax="true" data-orgchart-target="#chart-container" />
+        <button id="search">Search By Name</button>
+        <div id="test"></div>
+    </div>
+    <div class="col-md-9">
+        <button id="btnRecenter">Recenter</button>
+        <div id="chart-container"></div>
+    </div>
+</div>
+        @Scripts.Render("~/bundles/jquery")
+        <script type="text/javascript">
+            $(document).ready(function () {
 
-@Scripts.Render("~/bundles/jquery")
-<script type="text/javascript">
-    $(document).ready(function () {
+                
 
-        $('#btnRecenter').click(function () {
-            var chart = $('.orgchart');
-            var posX = chart.width() > chart.parent('div').width() ? -(chart.width() / 2) : '0';
-            chart.css('transform', 'matrix(1, 0, 0, 1, ' + posX + ', 0)');
-        });
-     
-        $("#SearchName").autocomplete({
-            source: function (request, response) {
-                alert("auto");
-                $.ajax({
-                    url: "/Home/Autocomplet",
-                    type: "POST",
-                    dataType: "json",
-                    data: { prefix: request.term },
-                    success: function (data) {
-                        response($.map(data, function (item) {
-                            return { label: item.Name, value: item.Name };
-                        }))
+                var ajaxFormSubmit = function () {
+                    $('#test').append('<i class="fa fa-circle-o-notch fa-spin spinner"></i>')
+                    var term = $("#searchTerm").val();
+                    
+                    $.ajax({
+                        url: "/Home/search",
+                        type: "POST",
+                        
+                        data: "searchTerm="+term,
+                        success: function (data) {
+                            $('#test').empty();
+                            $('#test').append(data);
+                           
+                        }
+                    });
+                }
+                    
 
-                    }
-                })
-            },
-            messages: {
-                noResults: "", results: ""
-            }
-        });
-    });
+                
 
 
-    $(function () {
+                $("#search").click(ajaxFormSubmit);
 
-        var nodeTemplate = function (data) {
-            return `
-<div class="root" >
-  <h1>${data.Name}</h1>
-   <p>${data.Role}</p>
-      <p>${data.WorkLocation}</p>
-      <p>${data.DepartmentName}</p>
 
-      <p class="bottom-right">${data.Reporties}</p>
+                $('#btnRecenter').click(function () {
+                    var chart = $('.orgchart');
+                    var posX = chart.width() > chart.parent('div').width() ? -(chart.width() - chart.width() ) : '0';
+                    chart.css('transform', 'matrix(1, 0, 0, 1, ' + posX + ', 0)');
+                });
 
-  </div>
-`;
-        };
+                //$("#SearchName").autocomplete({
+                //    source: function (request, response) {
+                //        alert("auto");
+                //        $.ajax({
+                //            url: "/Home/Autocomplet",
+                //            type: "POST",
+                //            dataType: "json",
+                //            data: { prefix: request.term },
+                //            success: function (data) {
+                //                response($.map(data, function (item) {
+                //                    return { label: item.Name, value: item.Name };
+                //                }))
 
-        var ajaxURLs = {
-            'children': '/Home/GetSubEmployee/',
-            'parent': '/Home/GetManager/',
-            'siblings': '/Home/GetSibling/',
-            'families': '/Home/GetFamily/'
+                //            }
+                //        })
+                //    },
+                //    messages: {
+                //        noResults: "", results: ""
+                //    }
+                //});
 
-        };
 
-        $('#chart-container').orgchart({
-            'data': '/Home/Init',
-            'nodeTemplate': nodeTemplate,
-            'ajaxURL': ajaxURLs,
-            'nodeId': "Id",
-            'nodeTitle': "Name",
-            'zoom': 'true',
-            'pan': 'true',
-            'verticalDepth': 3, // From the 3th level of orgchart, nodes will be aligned vertically.
-            'depth': 4
+                
+            });
 
-        });
+            
+            $(function () {
+                
+                
 
-    });
-</script>
+                var nodeTemplate = function (data) {
+                    return `
+                            <div class="root" >
+                                      <h1>${data.Name}</h1>
+                                       <p>${data.Role}</p>
+                                       <p>${data.WorkLocation}</p>
+                                       <p>${data.DepartmentName}</p>
+                                       <p class="bottom-right">${data.Reporties}</p>
+
+                            </div>
+                         `;
+                };
+
+                var ajaxURLs = {
+                    'children': '/Home/GetSubEmployee/',
+                    'parent': '/Home/GetManager/',
+                    'siblings': '/Home/GetSibling/',
+                    'families': '/Home/GetFamily/'
+
+                };
+
+                $('#chart-container').orgchart({
+                    'data': '/Home/Init',
+                    'nodeTemplate': nodeTemplate,
+                    'ajaxURL': ajaxURLs,
+                    'nodeId': "Id",
+                    'nodeTitle': "Name",
+                    'zoom': 'true',
+                    'pan': 'true',
+                    'zoominLimit': 7,
+                    'zoomoutLimit':0.5
+                    
+
+                });
+
+              
+
+            });
+
+
+        </script>

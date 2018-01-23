@@ -1,0 +1,63 @@
+﻿@model IEnumerable<OrgChart.Models.EmployeeSearch>
+<div class="list-group">
+    @foreach (OrgChart.Models.EmployeeSearch a in Model.OrderBy(o => o.Name))
+    {
+    <button class="list-group-item list-group-item-action" data-id="@a.Id">@Html.Label(a.Name) </button>
+    }
+</div>
+<script>
+    $(function () {
+        $(".list-group-item").click(function () {
+
+            $('.active').removeClass("active")
+            $(this).addClass("active");
+            var empid = $(this).data("id");
+            alert(empid);
+            $.ajax({
+                url: "/Home/Init",
+                type: "POST",
+
+                data: "id=" + empid,
+                success: function (data) {
+                    alert(data);
+                    $('#chart-container').html("");
+                    var nodeTemplate = function (data) {
+                        return `
+                            <div class="root" >
+                                      <h1>${data.Name}</h1>
+                                       <p>${data.Role}</p>
+                                       <p>${data.WorkLocation}</p>
+                                       <p>${data.DepartmentName}</p>
+                                       <p class="bottom-right">${data.Reporties}</p>
+
+                            </div>
+                         `;
+                    };
+
+                    var ajaxURLs = {
+                        'children': '/Home/GetSubEmployee/',
+                        'parent': '/Home/GetManager/',
+                        'siblings': '/Home/GetSibling/',
+                        'families': '/Home/GetFamily/'
+
+                    };
+
+                    var oc = $('#chart-container').orgchart({
+                        'data': data,
+                        'nodeTemplate': nodeTemplate,
+                        'ajaxURL': ajaxURLs,
+                        'nodeId': "Id",
+                        'nodeTitle': "Name",
+                        'zoom': 'true',
+                        'pan': 'true',
+                        'zoominLimit': 7,
+                        'zoomoutLimit': 0.5
+                   
+
+                    });
+                }
+            });
+
+        });
+    });
+</script>
