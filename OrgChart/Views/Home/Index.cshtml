@@ -22,10 +22,9 @@
 </div>
         @Scripts.Render("~/bundles/jquery")
         <script type="text/javascript">
-            $('.flipcontainer').on('click', function () {
-                $('.card').toggleClass('flipped');
-            });
+            
             $(document).ready(function () {
+                
                 $("#searchTerm").keyup(function (event) {
                     if (event.keyCode === 13) {
                         $("#search").click();
@@ -126,7 +125,15 @@
                     'families': '/Home/GetFamily/'
 
                 };
+                var flipattach=function() {
+                    
 
+
+                    $('.flipcontainer').hover(function () {
+                        $(this).children('.card').toggleClass('flipped');
+                    }
+                    );
+                };
                 yourGlobalVariable=$('#chart-container').orgchart({
                     'data': '/Home/Init',
                     'nodeTemplate': nodeTemplate,
@@ -136,13 +143,12 @@
                     'zoom': 'true',
                     'pan': 'true',
                     'zoominLimit': 7,
-                    'zoomoutLimit':0.5
-                    
+                    'zoomoutLimit':0.5,
+                    'initCompleted': flipattach
 
                 });
 
-              
-
+                
             });
 
 
