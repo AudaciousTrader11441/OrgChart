@@ -23,6 +23,20 @@ namespace OrgChart.Controllers
             return PartialView("_Search", lable);
         }
 
+        public ActionResult search1(string searchTerm = "giri")
+        {
+            //List<Employee> Employee = SqlDb.GetAllEmployee();
+            //var lable = Employee.Where(r => r.Name.ToLower().Contains(searchTerm.ToLower())).Select(r => new EmployeeSearch { Name = r.Name, Id = r.Id });
+            ////return Json(lable, JsonRequestBehavior.AllowGet);
+            searchTerm=searchTerm.Replace(" ", "%");
+            List<EmployeeSearch> res =SqlDb.SearchEmployee(searchTerm);
+            if(res[0].Id==0)
+            {
+                string html = "No Employee with " + searchTerm;
+                return Content(html);
+            }
+            return PartialView("_Search",res);
+        }
 
         public ActionResult Index()
         {
@@ -30,7 +44,7 @@ namespace OrgChart.Controllers
             return View();
         }
 
-        public ActionResult GetSubEmployee(int id= 10866)
+        public ActionResult GetSubEmployee(int id= 11358)
         {
             List<Employee> child = SqlDb.GetListSubordinates(id);
             var children = new { children = child };
@@ -39,7 +53,7 @@ namespace OrgChart.Controllers
             //return PartialView("_subEmployee", child);
 
         }
-        public JsonResult GetManager(int id = 11285)
+        public JsonResult GetManager(int id = 11358)
         {
             Employee root = SqlDb.GetManagerDetails(id);
             //string s = JsonConvert.SerializeObject(root);
@@ -48,7 +62,7 @@ namespace OrgChart.Controllers
 
         }
 
-        public ActionResult GetSibling(int id = 10866)
+        public ActionResult GetSibling(int id = 11358)
         {
             List<Employee> child = SqlDb.GetSiblings(id);
             //string s = JsonConvert.SerializeObject(child);
@@ -58,7 +72,7 @@ namespace OrgChart.Controllers
 
         }
 
-        public JsonResult Init(int id= 10866)    
+        public JsonResult Init(int id= 11358)    
         {
             //Employee root = SqlDb.GetInit();
             //string s = JsonConvert.SerializeObject(root);
@@ -82,7 +96,7 @@ namespace OrgChart.Controllers
 
         }
 
-        public JsonResult GetFamily(int id= 10866)
+        public JsonResult GetFamily(int id= 11358)
         {
             Employee root = SqlDb.GetManagerDetails(id);
             List<Employee> child = SqlDb.GetSiblings(id);

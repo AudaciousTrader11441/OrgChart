@@ -5,35 +5,49 @@
 
 <h2>Index</h2>
 <div class="row">
-    <div class="col-md-3">
-        <input id="searchTerm" type="text" name="searchTerm" action="@Url.Action("Index")" data-orgchart-ajax="true" data-orgchart-target="#chart-container" />
-        <button id="search">Search By Name</button>
-        <div id="test"></div>
+    <div class="col-md-3 text-center">
+        <input id="searchTerm" type="text" name="searchTerm" class="form-control" action="@Url.Action("Index")" data-orgchart-ajax="true" data-orgchart-target="#chart-container" />
+        <br />
+        <button id="search" class="btn btn-primary">Search By Name</button>
+        
+        <br />
+        <div id="test"class="scrollbar scrollbar-primary">
+            
+        </div>
     </div>
-    <div class="col-md-9">
-        <button id="btnRecenter">Recenter</button>
+    <div class="col-md-9 text-center">
+        <button id="btnRecenter" class="btn btn-primary" >Recenter</button>
         <div id="chart-container"></div>
     </div>
 </div>
         @Scripts.Render("~/bundles/jquery")
         <script type="text/javascript">
+            $('.flipcontainer').on('click', function () {
+                $('.card').toggleClass('flipped');
+            });
             $(document).ready(function () {
-
+                $("#searchTerm").keyup(function (event) {
+                    if (event.keyCode === 13) {
+                        $("#search").click();
+                    }
+                });
                 
 
                 var ajaxFormSubmit = function () {
-                    $('#test').append('<i class="fa fa-circle-o-notch fa-spin spinner"></i>')
+                    $('#search').html('<i class="fa fa-circle-o-notch fa-spin spinner"></i>');
+                    $('#search').attr("disabled","true");
                     var term = $("#searchTerm").val();
                     
                     $.ajax({
-                        url: "/Home/search",
+                        url: "/Home/search1",
                         type: "POST",
                         
                         data: "searchTerm="+term,
                         success: function (data) {
                             $('#test').empty();
                             $('#test').append(data);
-                           
+                            $('#search').html("Search By Name");
+                            $('#search').removeAttr('disabled');
                         }
                     });
                 }
@@ -47,10 +61,11 @@
 
                 $('#btnRecenter').click(function () {
                     var chart = $('.orgchart');
-                    var posX = chart.width() > chart.parent('div').width() ? -(chart.width() - chart.width() ) : '0';
+                    var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width()/2)) : '0';
                     chart.css('transform', 'matrix(1, 0, 0, 1, ' + posX + ', 0)');
                 });
 
+                
                 //$("#SearchName").autocomplete({
                 //    source: function (request, response) {
                 //        alert("auto");
@@ -76,21 +91,31 @@
                 
             });
 
-            
-            $(function () {
+            var yourGlobalVariable;
+            $(function() {
                 
                 
 
                 var nodeTemplate = function (data) {
                     return `
-                            <div class="root" >
+                            <div class="flipcontainer">
+  <div class="card">
+    <div class="front"><div class="root">
                                       <h1>${data.Name}</h1>
                                        <p>${data.Role}</p>
                                        <p>${data.WorkLocation}</p>
                                        <p>${data.DepartmentName}</p>
-                                       <p class="bottom-right">${data.Reporties}</p>
-
-                            </div>
+                                       <p class="bottom-right">${data.Reporties}</p>   
+                            </div></div>
+    <div class="back"><div class="root">
+                                      <h1>${data.Name}</h1>
+                                       <p>${data.Role}</p>
+                                          
+                            </div></div>
+  </div>
+</div>
+                            
+                           
                          `;
                 };
 
@@ -102,7 +127,7 @@
 
                 };
 
-                $('#chart-container').orgchart({
+                yourGlobalVariable=$('#chart-container').orgchart({
                     'data': '/Home/Init',
                     'nodeTemplate': nodeTemplate,
                     'ajaxURL': ajaxURLs,

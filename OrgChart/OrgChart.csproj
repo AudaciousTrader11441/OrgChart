@@ -167,6 +167,7 @@
     <Content Include="Content\jquery.orgchart.css" />
     <Content Include="Content\jquery.orgchart.min.css" />
     <Content Include="Content\OrgChartk.css" />
+    <Content Include="Content\Flip.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />

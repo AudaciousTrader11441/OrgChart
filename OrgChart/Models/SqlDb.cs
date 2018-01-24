@@ -165,6 +165,32 @@ namespace OrgChart.Models
 
 
         }
+        public static List<EmployeeSearch> SearchEmployee(string name)
+        {
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SqlDB"].ConnectionString);
+            using (con)
+            {
+                List<EmployeeSearch> res=new List<EmployeeSearch>();
+                DataSet ds = new DataSet();
+                SqlCommand cmd = new SqlCommand("sp_search_employee", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Employee_name", name));
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+                var x=ds.Tables[0].Rows.Count;
+                if (x == 0)
+                {
+                    EmployeeSearch blank = new EmployeeSearch() { Id = 0, Name = "No Employe" };
+                    res.Add(blank);
+                    return res;
+                }
+               res= ds.Tables[0].ToList<EmployeeSearch>();
+                return res;
+
+            }
+
+
+        }
 
 
     }
