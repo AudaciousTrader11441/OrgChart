@@ -175,16 +175,16 @@
   color: rgba(68, 157, 68, 0.8);
 }
 
-.orgchart .node:hover {
-  background-color: rgba(238, 217, 54, 0.5);
-  transition: .5s;
-  cursor: default;
-  z-index: 20;
-}
+    .orgchart .node:hover {
+        background-color: rgba(127, 189, 225, 0.5);
+        transition: .5s;
+        cursor: default;
+        z-index: 20;
+    }
 
-.orgchart .node.focused {
-  background-color: rgba(238, 217, 54, 0.5);
-}
+    .orgchart .node.focused {
+        background-color: rgba(127, 189, 225, 0.5);
+    }
 
 .orgchart .ghost-node {
   position: fixed;
@@ -340,7 +340,7 @@
 }
 
 .orgchart .node .toggleBtn:hover {
-  color: rgba(68, 157, 68, 0.8);
+  color: rgba(127, 189, 225, 0.8);
 }
 
 .oc-export-btn {

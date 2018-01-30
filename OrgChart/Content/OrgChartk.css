@@ -1,4 +1,10 @@
-﻿.root {
+﻿#test {
+    position: absolute;
+    top: 32px;
+    display:none;
+}
+
+.root {
     background: #F8F8F8;
     border: solid;
     border-width: 2px;
@@ -68,7 +74,7 @@
     margin-top: 20px;
     float: left;
     height: 400px;
-    width: 100%;
+    width: 293px;
     overflow-y: scroll;
     margin-bottom: 25px;
 }

@@ -116,13 +116,13 @@ namespace OrgChart.Controllers
 
         }
 
-        public JsonResult Autocomplet(string prefix="sri")
+        public JsonResult Autocomplet(string term="sri")
         {
-            emp = SqlDb.GetAllEmployee();
-            var name = (from N in emp
-                        where N.Name.Contains(prefix)
-                        select new { Name=N.Name });
-            return Json(name, JsonRequestBehavior.AllowGet);
+            term = term.Replace(" ", "%");
+            List<EmployeeSearch> res = SqlDb.SearchEmployee(term);
+            var autosuggest = res.Take(10).Select(r => new { label = r.Name, value = r.Id });
+            
+            return Json(autosuggest, JsonRequestBehavior.AllowGet);
         }
 
 

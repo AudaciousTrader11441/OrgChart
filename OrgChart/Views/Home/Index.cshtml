@@ -1,21 +1,12 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<br />
+
 <div class="row">
-    <div class="col-md-3 text-center">
-        <input id="searchTerm" type="text" name="searchTerm" class="form-control" action="@Url.Action("Index")" data-orgchart-ajax="true" data-orgchart-target="#chart-container" />
-        <br />
-        <button id="search" class="btn btn-primary">Search By Name</button>
-        
-        <br />
-        <div id="test"class="scrollbar scrollbar-primary">
-            
-        </div>
-    </div>
-    <div class="col-md-9 text-center">
+
+    <div class="col-md-12 text-center">
         <button id="btnRecenter" class="btn btn-primary" >Recenter</button>
         <div id="chart-container"></div>
     </div>
@@ -30,38 +21,91 @@
                         $("#search").click();
                     }
                 });
-                
 
+                
+                
                 var ajaxFormSubmit = function () {
                     $('#search').html('<i class="fa fa-circle-o-notch fa-spin spinner"></i>');
-                    $('#search').attr("disabled","true");
+                    $('#search').attr("disabled", "true");
                     var term = $("#searchTerm").val();
-                    
+
                     $.ajax({
                         url: "/Home/search1",
                         type: "POST",
-                        
-                        data: "searchTerm="+term,
+
+                        data: "searchTerm=" + term,
                         success: function (data) {
                             $('#test').empty();
                             $('#test').append(data);
-                            $('#search').html("Search By Name");
+                            $('#search').html("Search");
                             $('#search').removeAttr('disabled');
                         }
                     });
-                }
-                    
+                };
+
+                var customautocomplet = function () {
+                    $('#search').html('<i class="fa fa-circle-o-notch fa-spin spinner"></i>');
+                    $('#search').attr("disabled", "true");
+                    var term = $("#searchTerm").val();
+
+                    $.ajax({
+                        url: "/Home/search1",
+                        type: "POST",
+
+                        data: "searchTerm=" + term,
+                        success: function (data) {
+                            $('#test').empty();
+                            $('#test').append(data);
+                            $('#search').html("Search");
+                            $('#search').removeAttr('disabled');
+                        }
+                    });
+                };
+                $("input[data-orgchart-autocomplet1]").keyup(
+                    function () {
+                        if ($(this).val().length >= 3) {
+                            customautocomplet();
+                        };
+                    }
+                    );
+
+                var createAutoComplete = function () {
+                    var $input = $(this);
+                    var options = { source: $input.attr("data-orgchart-autocomplet") }
+                    $input.autocomplete(options)
+                };
+                $("input[data-orgchart-autocomplet]").each(createAutoComplete);
 
                 
 
+                $('#searchTerm').focus(function () {
+                    $('#test').css("display", "block");
+                })
+
+                window.onclick = function (event) {
+                    if (!event.target.matches('#searchTerm, #test')) {
+
+                        $('#test').css("display", "None");
+                    }
+                }
 
                 $("#search").click(ajaxFormSubmit);
 
+                //var flipattach = function () {
+                   
+                //    alert("Hello from flip");
+                    
+                //    $('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave',(function () {
+                //        $(this).children('.card').toggleClass('flipped');
+                //    }
+                //    ));
 
-                $('#btnRecenter').click(function () {
+                //};
+                $('#btnRecenter').off().on("click", function () {
                     var chart = $('.orgchart');
                     var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width()/2)) : '0';
                     chart.css('transform', 'matrix(1, 0, 0, 1, ' + posX + ', 0)');
+                  
                 });
 
                 
@@ -85,9 +129,9 @@
                 //        noResults: "", results: ""
                 //    }
                 //});
+               
 
-
-                
+               
             });
 
             var yourGlobalVariable;
@@ -98,21 +142,22 @@
                 var nodeTemplate = function (data) {
                     return `
                             <div class="flipcontainer">
-  <div class="card">
-    <div class="front"><div class="root">
+                              <div class="card">
+                                <div class="front"><div class="root">
                                       <h1>${data.Name}</h1>
                                        <p>${data.Role}</p>
                                        <p>${data.WorkLocation}</p>
                                        <p>${data.DepartmentName}</p>
                                        <p class="bottom-right">${data.Reporties}</p>   
-                            </div></div>
-    <div class="back"><div class="root">
+                                      </div>
+                                   </div>
+                                <div class="back"><div class="root">
                                       <h1>${data.Name}</h1>
                                        <p>${data.Role}</p>
                                           
-                            </div></div>
-  </div>
-</div>
+                                     </div></div>
+                              </div>
+                            </div>
                             
                            
                          `;
@@ -125,14 +170,13 @@
                     'families': '/Home/GetFamily/'
 
                 };
-                var flipattach=function() {
+                var flipattach = function () {
                     
-
-
-                    $('.flipcontainer').hover(function () {
+                    $('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave', (function () {
                         $(this).children('.card').toggleClass('flipped');
                     }
-                    );
+                    ));
+                    
                 };
                 yourGlobalVariable=$('#chart-container').orgchart({
                     'data': '/Home/Init',
@@ -144,10 +188,25 @@
                     'pan': 'true',
                     'zoominLimit': 7,
                     'zoomoutLimit':0.5,
-                    'initCompleted': flipattach
+                    'createNode': function ($node, data) {
+                        alert("Create Node");
+                        $('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave', (function () {
+                            $(this).children('.card').toggleClass('flipped');
+                        }
+                        ));
+                        
+                    },
+                    'initCompleted': function ($node, data) {
+                        $('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave', (function () {
+                            $(this).children('.card').toggleClass('flipped');
+                        }
+
+                        ));
+                        alert("Create init");
+                    }
 
                 });
-
+                
                 
             });
 
