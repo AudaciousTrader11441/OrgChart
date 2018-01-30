@@ -170,14 +170,6 @@
                     'families': '/Home/GetFamily/'
 
                 };
-                var flipattach = function () {
-                    
-                    $('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave', (function () {
-                        $(this).children('.card').toggleClass('flipped');
-                    }
-                    ));
-                    
-                };
                 yourGlobalVariable=$('#chart-container').orgchart({
                     'data': '/Home/Init',
                     'nodeTemplate': nodeTemplate,
@@ -187,22 +179,20 @@
                     'zoom': 'true',
                     'pan': 'true',
                     'zoominLimit': 7,
-                    'zoomoutLimit':0.5,
-                    'createNode': function ($node, data) {
-                        alert("Create Node");
-                        $('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave', (function () {
+                    'zoomoutLimit': 0.5,
+                    
+                    'createNode': function ($node, data) {  
+                        $node.find('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave', (function () {
                             $(this).children('.card').toggleClass('flipped');
                         }
                         ));
                         
                     },
                     'initCompleted': function ($node, data) {
-                        $('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave', (function () {
-                            $(this).children('.card').toggleClass('flipped');
-                        }
-
-                        ));
-                        alert("Create init");
+                        var chart = $node.find('.orgchart');
+                        var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
+                        chart.css('transform', 'matrix(1, 0, 0, 1, ' + posX + ', 0)');
+                        
                     }
 
                 });

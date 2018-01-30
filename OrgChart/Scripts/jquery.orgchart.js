@@ -723,9 +723,12 @@
                 if ($leftEdge.length) {
                     this.switchHorizontalArrow($node);
                 }
+               
             } else {
                 $node.children('.edge').removeClass('fa-chevron-up fa-chevron-down fa-chevron-right fa-chevron-left');
+               
             }
+
         },
         //
         nodeClickHandler: function (event) {
@@ -770,6 +773,7 @@
         },
         //
         topEdgeClickHandler: function (event) {
+            
             event.stopPropagation();
             var that = this;
             var $topEdge = $(event.target);

@@ -1,4 +1,4 @@
-﻿
+﻿/*
 alter function fn_countofsub
 (@manager_id int)
 returns int
@@ -167,3 +167,4 @@ set @relationship = 000
 
 return @relationship
 end
+*/
