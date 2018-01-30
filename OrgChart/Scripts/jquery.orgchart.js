@@ -723,12 +723,9 @@
                 if ($leftEdge.length) {
                     this.switchHorizontalArrow($node);
                 }
-               
             } else {
                 $node.children('.edge').removeClass('fa-chevron-up fa-chevron-down fa-chevron-right fa-chevron-left');
-               
             }
-
         },
         //
         nodeClickHandler: function (event) {
@@ -773,7 +770,6 @@
         },
         //
         topEdgeClickHandler: function (event) {
-            
             event.stopPropagation();
             var that = this;
             var $topEdge = $(event.target);
@@ -800,6 +796,7 @@
         },
         //
         bottomEdgeClickHandler: function (event) {
+            alert("bottom");
             event.stopPropagation();
             var $bottomEdge = $(event.target);
             var $node = $(event.delegateTarget);
@@ -812,23 +809,45 @@
                     this.hideChildren($node);
                 } else { // show the descendants
                     this.showChildren($node);
+                    var siblingsState = this.getNodeState($node, 'siblings');
+                    if (siblingsState.exist) {
+                        var $siblings = $node.closest('table').parent().siblings();
+                        if ($siblings.find('.sliding').length) { return; }
+                        if (siblingsState.visible) {
+                            this.hideSiblings($node);
+                        }
+                    }
                 }
             } else { // load the new children nodes of the specified node by ajax request
                 if (this.startLoading($bottomEdge)) {
                     var opts = this.options;
                     var url = $.isFunction(opts.ajaxURL.children) ? opts.ajaxURL.children(event.data.nodeData) : opts.ajaxURL.children + $node[0].id;
                     this.loadNodes('children', url, $bottomEdge);
+                    var siblingsState = this.getNodeState($node, 'siblings');
+                    if (siblingsState.exist) {
+                        var $siblings = $node.closest('table').parent().siblings();
+                        if ($siblings.find('.sliding').length) { return; }
+                        if (siblingsState.visible) {
+                            this.hideSiblings($node);
+                        }
+                    }
                 }
             }
+            //hide sibling on bottom click 
+            
+            
         },
         //
         hEdgeClickHandler: function (event) {
+            alert("sibling")
             event.stopPropagation();
             var $hEdge = $(event.target);
             var $node = $(event.delegateTarget);
             var opts = this.options;
+            
             var siblingsState = this.getNodeState($node, 'siblings');
             if (siblingsState.exist) {
+                
                 var $siblings = $node.closest('table').parent().siblings();
                 if ($siblings.find('.sliding').length) { return; }
                 if (opts.toggleSiblingsResp) {
@@ -852,9 +871,19 @@
                         this.hideSiblings($node);
                     } else {
                         this.showSiblings($node);
+                        //show sibling hide child
+                        var childrenState = this.getNodeState($node, 'children');
+                        if (childrenState.exist) {
+                            var $children = $node.closest('tr').siblings(':last');
+                            if ($children.find('.sliding').length) { return; }
+                            if (childrenState.visible) {
+                            this.hideChildren($node);
+                            }
+                        };
                     }
                 }
             } else {
+
                 // load the new sibling nodes of the specified node by ajax request
                 if (this.startLoading($hEdge)) {
                     var nodeId = $node[0].id;
@@ -862,8 +891,13 @@
                         ($.isFunction(opts.ajaxURL.siblings) ? opts.ajaxURL.siblings(event.data.nodeData) : opts.ajaxURL.siblings + nodeId) :
                         ($.isFunction(opts.ajaxURL.families) ? opts.ajaxURL.families(event.data.nodeData) : opts.ajaxURL.families + nodeId);
                     this.loadNodes('siblings', url, $hEdge);
+
+
                 }
+
             }
+            
+
         },
         //
         expandVNodesEnd: function (event) {
