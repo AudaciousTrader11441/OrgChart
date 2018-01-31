@@ -796,7 +796,7 @@
         },
         //
         bottomEdgeClickHandler: function (event) {
-            alert("bottom");
+            
             event.stopPropagation();
             var $bottomEdge = $(event.target);
             var $node = $(event.delegateTarget);
@@ -836,10 +836,11 @@
             //hide sibling on bottom click 
             
             
+            
         },
         //
         hEdgeClickHandler: function (event) {
-            alert("sibling")
+       
             event.stopPropagation();
             var $hEdge = $(event.target);
             var $node = $(event.delegateTarget);
@@ -871,19 +872,21 @@
                         this.hideSiblings($node);
                     } else {
                         this.showSiblings($node);
-                        //show sibling hide child
+                        var $bottomEdge = $(event.target);
                         var childrenState = this.getNodeState($node, 'children');
                         if (childrenState.exist) {
                             var $children = $node.closest('tr').siblings(':last');
                             if ($children.find('.sliding').length) { return; }
                             if (childrenState.visible) {
-                            this.hideChildren($node);
+                                this.hideChildren($node);
+                              
                             }
+
                         };
                     }
                 }
             } else {
-
+                
                 // load the new sibling nodes of the specified node by ajax request
                 if (this.startLoading($hEdge)) {
                     var nodeId = $node[0].id;
@@ -894,6 +897,9 @@
 
 
                 }
+                
+                //show sibling hide child
+
 
             }
             
@@ -1359,6 +1365,7 @@
         },
         //
         addSiblings: function ($node, data) {
+
             this.buildSiblingNode($node.closest('table'), data);
             $node.closest('.nodes').data('siblingsLoaded', true);
             if (!$node.children('.leftEdge').length) {
@@ -1367,7 +1374,9 @@
             if (this.isInAction($node)) {
                 this.switchHorizontalArrow($node);
                 $node.children('.topEdge').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                
             }
+            this.hideChildren($node);
         },
         //
         removeNodes: function ($node) {
