@@ -97,6 +97,7 @@
 
             if (this.options.zoom) {
                 this.bindZoom();
+                
             }
 
             return this;
@@ -182,7 +183,7 @@
                 $chart.data('panning', false);
                 return;
             } else {
-                $chart.css('cursor', 'move').data('panning', true);
+                $chart.css('transition-duration', '0s').css('cursor', 'move').data('panning', true);
             }
             var lastX = 0;
             var lastY = 0;
@@ -532,6 +533,7 @@
             }
             this.repaint($animatedNodes.get(0));
             $animatedNodes.addClass('sliding slide-up').eq(0).one('transitionend', { 'animatedNodes': $animatedNodes, 'lowerLevel': $lowerLevel, 'isVerticalDesc': isVerticalDesc, 'node': $node }, this.hideChildrenEnd.bind(this));
+            
         },
         //
         showChildrenEnd: function (event) {
@@ -751,6 +753,13 @@
                             that.addSiblings($edge.parent(), data.siblings ? data.siblings : data);
                         }
                     }
+                    
+
+                        var chart = $('.orgchart');
+                        var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
+                        chart.css('transform', 'matrix(1, 0, 0, 1, ' + posX + ', 0)');
+
+                   
                 })
                 .fail(function () {
                     console.log('Failed to get ' + rel + ' data');
@@ -801,13 +810,17 @@
             var $bottomEdge = $(event.target);
             var $node = $(event.delegateTarget);
             var childrenState = this.getNodeState($node, 'children');
+            
             if (childrenState.exist) {
                 var $children = $node.closest('tr').siblings(':last');
                 if ($children.find('.sliding').length) { return; }
+               
                 // hide the descendant nodes of the specified node
                 if (childrenState.visible) {
                     this.hideChildren($node);
+                    
                 } else { // show the descendants
+                    
                     this.showChildren($node);
                     var siblingsState = this.getNodeState($node, 'siblings');
                     if (siblingsState.exist) {

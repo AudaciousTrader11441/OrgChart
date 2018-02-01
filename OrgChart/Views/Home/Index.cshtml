@@ -4,13 +4,13 @@
 
 <br />
 
-<div class="row">
 
-    <div class="col-md-12 text-center">
+
+    <div class="well text-center">
         <button id="btnRecenter" class="btn btn-primary" >Recenter</button>
         <div id="chart-container"></div>
     </div>
-</div>
+
         @Scripts.Render("~/bundles/jquery")
         <script type="text/javascript">
             
@@ -103,12 +103,20 @@
                 //};
                 $('#btnRecenter').off().on("click", function () {
                     var chart = $('.orgchart');
-                    var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width()/2)) : '0';
-                    chart.css('transform', 'matrix(1, 0, 0, 1, ' + posX + ', 0)');
+                    var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
+
+                    chart.css('transform', 'translate(' + posX + 'px, 0px)').css('transition-duration', '0.5s');
                   
                 });
+                var recenterxy = function () {
 
-                
+                    var chart = $('.orgchart');
+                    var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
+                    var posy = chart.height() > chart.parent('div').height() ? -((chart.height() / 2)) : '0';
+                    chart.css('transform', 'translate(' + posX + 'px,' + posy + 'px)').css('transition-duration', '0.5s');
+
+                };
+                setTimeout(recenterxy,800);
                 //$("#SearchName").autocomplete({
                 //    source: function (request, response) {
                 //        alert("auto");
@@ -153,7 +161,7 @@
                                    </div>
                                 <div class="back"><div class="root">
                                       <h1>${data.Name}</h1>
-                                        <img class="avatar" src="/Images/${data.Id}.jpg">
+                                        <img class="avatar" src="/Images/${data.Id}.jpg" background="/Images/person.png">
                                           
                                      </div></div>
                               </div>
@@ -170,6 +178,15 @@
                     'families': '/Home/GetFamily/'
 
                 };
+
+                var recenterx = function () {
+
+                    var chart = $('.orgchart');
+                    var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
+                    chart.css('transform', 'translate(' + posX + 'px, 0px)').css('transition-duration', '0.5s');
+
+
+                };
                 yourGlobalVariable=$('#chart-container').orgchart({
                     'data': '/Home/Init',
                     'nodeTemplate': nodeTemplate,
@@ -180,20 +197,46 @@
                     'pan': 'true',
                     'zoominLimit': 7,
                     'zoomoutLimit': 0.5,
-                    
+                    'collapsed': false,
                     'createNode': function ($node, data) {  
+                        
+                        var recenterx = function () {
+
+                            var chart = $('.orgchart');
+                            var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
+                            chart.css('transform', 'translate(' + posX + 'px,0px)').css('transition-duration', '0.5s');
+
+                        };
+                        var recenterxy = function () {
+
+                            var chart = $('.orgchart');
+                            var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
+                            var posy = chart.height() > chart.parent('div').height() ? -((chart.height() / 2)) : '0';
+                            chart.css('transform', 'translate(' + posX + 'px,' + posy + 'px)').css('transition-duration', '1s');
+                            chart.css('transition-duration', '0.5s');
+
+                        };
                         $node.find('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave', (function () {
                             $(this).children('.card').toggleClass('flipped');
+                            
                         }
                         ));
                         
-                    },
-                    'initCompleted': function ($node, data) {
-                        var chart = $node.find('.orgchart');
-                        var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
-                        chart.css('transform', 'matrix(1, 0, 0, 1, ' + posX + ', 0)');
+                        $node.find('.horizontalEdge').off("click").on("click", function () {
+                            setTimeout(recenterxy, 800);
+                        });
+                        $node.find('.horizontalEdge').off("click").on("click", function () {
+                            setTimeout(recenterxy, 800);
+                        });
+                        $node.find('.topEdge ').off("click").on("click", function () {
+                            setTimeout(recenterx, 800);
+                        });
+                        $node.find('.bottomEdge ').off("click").on("click", function () {
+                            setTimeout(recenterxy, 800);
+                        });
                         
-                    }
+                    },
+                    'initCompleted': recenterx
 
                 });
                 

@@ -1,9 +1,18 @@
-﻿#test {
+﻿#chart-container {
+    position: relative;
+    display: inline-block;
+    height:515px;
+    width: calc(100% - 24px);
+    overflow: auto;
+    text-align: center;
+}
+#test {
     position: absolute;
     top: 32px;
     display:none;
 }
 .avatar {
+    background-image: url("/Images/person.png");
     border-radius: 50%;
     width: 100px;
     height: 100px;
