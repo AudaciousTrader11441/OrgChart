@@ -1,0 +1,69 @@
+﻿@model IEnumerable<OrgChart.Models.EmployeeTree>
+
+<ul class="list-group" >
+    @foreach (OrgChart.Models.EmployeeTree a in Model.OrderBy(model => model.Name))
+    {
+    <li class="list-group-item list-group-item-action justify-content-between flexcenter" data-id="@a.Id" data-open="0" data-reporties="@a.Reporties">
+        @if (a.Reporties > 0)
+    {<span class="icon"><i class="fa fa-plus mr-2"></i></span>}
+else
+{ <span class="indent"></span>}
+       @a.Name
+        @if (a.Reporties > 0)
+    {<span class="badge badge-pill badge-primary ml-3 ">@a.Reporties</span>}
+        <div id="child"></div>
+
+    </li>
+    }
+</ul>
+@Scripts.Render("~/bundles/jquery")
+<script>
+    $(function () {
+        $('.list-group-item').off('click').on('click',(function (event) {
+            event.stopImmediatePropagation();
+            var id = $(this).data("id");
+            var expanded = $(this).attr('data-open');
+            var reporties = $(this).data("reporties");
+            var that = $(this);  
+            
+            if (reporties > 0 && expanded == 0) {
+                that.attr('data-open', '1');
+                that.find('.icon').html('<i class="fa fa-circle-o-notch fa-spin spinner"></i>');
+                $.ajax({
+                    url: "/Home/Tree",
+                    type: "POST",
+                    data: "id=" + id,
+                    success: function (data) {
+                        
+                        that.find('#child').html("<span class=\"indent\"></span><span class=\"indent\"></span>" + data);
+                        that.find('.icon:first').html('<i class=\"fa fa-minus\"></i>');
+                    }
+                });
+            }
+            else if (reporties > 0 && expanded == 1) {
+                that.find('.icon').html('<i class="fa fa-circle-o-notch fa-spin spinner"></i>');
+                that.attr('data-open', '0');
+                that.find('#child').html("");
+                that.find('.icon').html('<i class=\"fa fa-plus mr-2\"></i>');
+
+            }
+            $('.active').removeClass("active");
+            $('.badge-secondary').removeClass("badge-secondary");
+            $(this).addClass("active");
+            that.find('.badge:first').removeClass("primary-secondary").addClass("badge-secondary");;
+            $.ajax({
+                url: "/Home/Init",
+                type: "POST",
+
+                data: "id=" + id,
+                success: function (data) {
+
+                    $('#chart-container').html("");
+                    window.yourGlobalVariable.init({ 'data': data });
+                }
+            });
+        }));
+        
+
+    });
+</script>

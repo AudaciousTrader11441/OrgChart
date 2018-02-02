@@ -124,6 +124,11 @@ namespace OrgChart.Controllers
             
             return Json(autosuggest, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult Tree(int id= 10000)
+        {
+            List<EmployeeTree> child = SqlDb.GetTreeChild(id);
+            return PartialView("_Tree", child);
+        }
 
 
     }

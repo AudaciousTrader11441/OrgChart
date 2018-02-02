@@ -3,152 +3,164 @@
 }
 
 <br />
-
-
-
-    <div class="well text-center">
-        <button id="btnRecenter" class="btn btn-primary" >Recenter</button>
-        <div id="chart-container"></div>
+<div id='slider' class="scrollbar scrollbar-primary mt-6" style="width: 400px !important;"> @Html.Action("Tree")</div>
+<div id='trigger' class="handle"><i class="fa fa-arrow-right"></i></div>
+<div class="container" style="max-width:100% !important;">
+    <div class="row"> 
+        <div class="col-md-12">
+            <div class="well text-center">
+                <button id="btnRecenter" class="btn btn-primary">Recenter</button>
+                <div id="chart-container"></div>
+            </div>
+        </div>
     </div>
+</div>
+@Scripts.Render("~/bundles/jquery")
+<script type="text/javascript">
 
-        @Scripts.Render("~/bundles/jquery")
-        <script type="text/javascript">
-            
-            $(document).ready(function () {
-                
-                $("#searchTerm").keyup(function (event) {
-                    if (event.keyCode === 13) {
-                        $("#search").click();
-                    }
-                });
+    $(document).ready(function () {
+        $('#slider').slideReveal({
+            trigger: $("#trigger"),
+            shown: function (slider, trigger) {
+                $('body').find('.handle').css('color', 'red').html('<i class="fa fa-arrow-left"></i>');
+            },
+            hidden: function (slider, trigger) {
+                $('body').find('.handle').css('color', 'blue').html('<i class="fa fa-arrow-right"></i>');;
+            }
+        });
+        $("#searchTerm").keyup(function (event) {
+            if (event.keyCode === 13) {
+                $("#search").click();
+            }
+        });
 
-                
-                
-                var ajaxFormSubmit = function () {
-                    $('#search').html('<i class="fa fa-circle-o-notch fa-spin spinner"></i>');
-                    $('#search').attr("disabled", "true");
-                    var term = $("#searchTerm").val();
 
-                    $.ajax({
-                        url: "/Home/search1",
-                        type: "POST",
 
-                        data: "searchTerm=" + term,
-                        success: function (data) {
-                            $('#test').empty();
-                            $('#test').append(data);
-                            $('#search').html("Search");
-                            $('#search').removeAttr('disabled');
-                        }
-                    });
-                };
+        var ajaxFormSubmit = function () {
+            $('#search').html('<i class="fa fa-circle-o-notch fa-spin spinner"></i>');
+            $('#search').attr("disabled", "true");
+            var term = $("#searchTerm").val();
 
-                var customautocomplet = function () {
-                    $('#search').html('<i class="fa fa-circle-o-notch fa-spin spinner"></i>');
-                    $('#search').attr("disabled", "true");
-                    var term = $("#searchTerm").val();
+            $.ajax({
+                url: "/Home/search1",
+                type: "POST",
 
-                    $.ajax({
-                        url: "/Home/search1",
-                        type: "POST",
-
-                        data: "searchTerm=" + term,
-                        success: function (data) {
-                            $('#test').empty();
-                            $('#test').append(data);
-                            $('#search').html("Search");
-                            $('#search').removeAttr('disabled');
-                        }
-                    });
-                };
-                $("input[data-orgchart-autocomplet1]").keyup(
-                    function () {
-                        if ($(this).val().length >= 3) {
-                            customautocomplet();
-                        };
-                    }
-                    );
-
-                var createAutoComplete = function () {
-                    var $input = $(this);
-                    var options = { source: $input.attr("data-orgchart-autocomplet") }
-                    $input.autocomplete(options)
-                };
-                $("input[data-orgchart-autocomplet]").each(createAutoComplete);
-
-                
-
-                $('#searchTerm').focus(function () {
-                    $('#test').css("display", "block");
-                })
-
-                window.onclick = function (event) {
-                    if (!event.target.matches('#searchTerm, #test')) {
-
-                        $('#test').css("display", "None");
-                    }
+                data: "searchTerm=" + term,
+                success: function (data) {
+                    $('#test').empty();
+                    $('#test').append(data);
+                    $('#search').html("Search");
+                    $('#search').removeAttr('disabled');
                 }
-
-                $("#search").click(ajaxFormSubmit);
-
-                //var flipattach = function () {
-                   
-                //    alert("Hello from flip");
-                    
-                //    $('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave',(function () {
-                //        $(this).children('.card').toggleClass('flipped');
-                //    }
-                //    ));
-
-                //};
-                $('#btnRecenter').off().on("click", function () {
-                    var chart = $('.orgchart');
-                    var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
-
-                    chart.css('transform', 'translate(' + posX + 'px, 0px)').css('transition-duration', '0.5s');
-                  
-                });
-                var recenterxy = function () {
-
-                    var chart = $('.orgchart');
-                    var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
-                    var posy = chart.height() > chart.parent('div').height() ? -((chart.height() / 2)) : '0';
-                    chart.css('transform', 'translate(' + posX + 'px,' + posy + 'px)').css('transition-duration', '0.5s');
-
-                };
-                setTimeout(recenterxy,800);
-                //$("#SearchName").autocomplete({
-                //    source: function (request, response) {
-                //        alert("auto");
-                //        $.ajax({
-                //            url: "/Home/Autocomplet",
-                //            type: "POST",
-                //            dataType: "json",
-                //            data: { prefix: request.term },
-                //            success: function (data) {
-                //                response($.map(data, function (item) {
-                //                    return { label: item.Name, value: item.Name };
-                //                }))
-
-                //            }
-                //        })
-                //    },
-                //    messages: {
-                //        noResults: "", results: ""
-                //    }
-                //});
-               
-
-               
             });
+        };
 
-            var yourGlobalVariable;
-            $(function() {
-                
-                
+        var customautocomplet = function () {
+            $('#search').html('<i class="fa fa-circle-o-notch fa-spin spinner"></i>');
+            $('#search').attr("disabled", "true");
+            var term = $("#searchTerm").val();
 
-                var nodeTemplate = function (data) {
-                    return `
+            $.ajax({
+                url: "/Home/search1",
+                type: "POST",
+
+                data: "searchTerm=" + term,
+                success: function (data) {
+                    $('#test').empty();
+                    $('#test').append(data);
+                    $('#search').html("Search");
+                    $('#search').removeAttr('disabled');
+                }
+            });
+        };
+        $("input[data-orgchart-autocomplet1]").keyup(
+            function () {
+                if ($(this).val().length >= 3) {
+                    customautocomplet();
+                };
+            }
+        );
+
+        var createAutoComplete = function () {
+            var $input = $(this);
+            var options = { source: $input.attr("data-orgchart-autocomplet") }
+            $input.autocomplete(options)
+        };
+        $("input[data-orgchart-autocomplet]").each(createAutoComplete);
+
+
+
+        $('#searchTerm').focus(function () {
+            $('#test').css("display", "block");
+        })
+
+        window.onclick = function (event) {
+            if (!event.target.matches('#searchTerm, #test')) {
+
+                $('#test').css("display", "None");
+            }
+        }
+
+        $("#search").click(ajaxFormSubmit);
+
+        //var flipattach = function () {
+
+        //    alert("Hello from flip");
+
+        //    $('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave',(function () {
+        //        $(this).children('.card').toggleClass('flipped');
+        //    }
+        //    ));
+
+        //};
+        $('#btnRecenter').off().on("click", function () {
+            var chart = $('.orgchart');
+            var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
+
+            chart.css('transform', 'translate(' + posX + 'px, 0px)').css('transition-duration', '0.5s');
+
+        });
+        var recenterxy = function () {
+
+            var chart = $('.orgchart');
+            var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
+            var posy = chart.height() > chart.parent('div').height() ? -((chart.height() / 2)) : '0';
+            chart.css('transform', 'translate(' + posX + 'px,' + posy + 'px)').css('transition-duration', '0.5s');
+
+        };
+        setTimeout(recenterxy, 800);
+        //$("#SearchName").autocomplete({
+        //    source: function (request, response) {
+        //        alert("auto");
+        //        $.ajax({
+        //            url: "/Home/Autocomplet",
+        //            type: "POST",
+        //            dataType: "json",
+        //            data: { prefix: request.term },
+        //            success: function (data) {
+        //                response($.map(data, function (item) {
+        //                    return { label: item.Name, value: item.Name };
+        //                }))
+
+        //            }
+        //        })
+        //    },
+        //    messages: {
+        //        noResults: "", results: ""
+        //    }
+        //});
+
+
+
+    });
+
+    var yourGlobalVariable;
+    $(function () {
+
+
+
+        var nodeTemplate = function (data) {
+            return `
                             <div class="flipcontainer">
                               <div class="card">
                                 <div class="front"><div class="root">
@@ -156,92 +168,93 @@
                                        <p>${data.Role}</p>
                                        <p>${data.WorkLocation}</p>
                                        <p>${data.DepartmentName}</p>
-                                       <p class="bottom-right">${data.Reporties}</p>   
+                                       <p class="bottom-right">${data.Reporties}</p>
                                       </div>
                                    </div>
                                 <div class="back"><div class="root">
                                       <h1>${data.Name}</h1>
-                                        <img class="avatar" src="/Images/${data.Id}.jpg" background="/Images/person.png">
-                                          
+
+                                        <img class="avatar" src="/Images/${data.Id}.jpg" >
+
                                      </div></div>
                               </div>
                             </div>
-                            
-                           
+
+
                          `;
-                };
+        };
 
-                var ajaxURLs = {
-                    'children': '/Home/GetSubEmployee/',
-                    'parent': '/Home/GetManager/',
-                    'siblings': '/Home/GetSibling/',
-                    'families': '/Home/GetFamily/'
+        var ajaxURLs = {
+            'children': '/Home/GetSubEmployee/',
+            'parent': '/Home/GetManager/',
+            'siblings': '/Home/GetSibling/',
+            'families': '/Home/GetFamily/'
 
-                };
+        };
+
+        var recenterx = function () {
+
+            var chart = $('.orgchart');
+            var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
+            chart.css('transform', 'translate(' + posX + 'px, 0px)').css('transition-duration', '0.5s');
+
+
+        };
+        yourGlobalVariable = $('#chart-container').orgchart({
+            'data': '/Home/Init',
+            'nodeTemplate': nodeTemplate,
+            'ajaxURL': ajaxURLs,
+            'nodeId': "Id",
+            'nodeTitle': "Name",
+            'zoom': 'true',
+            'pan': 'true',
+            'zoominLimit': 7,
+            'zoomoutLimit': 0.5,
+            'collapsed': false,
+            'createNode': function ($node, data) {
 
                 var recenterx = function () {
 
                     var chart = $('.orgchart');
                     var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
-                    chart.css('transform', 'translate(' + posX + 'px, 0px)').css('transition-duration', '0.5s');
-
+                    chart.css('transform', 'translate(' + posX + 'px,0px)').css('transition-duration', '0.5s');
 
                 };
-                yourGlobalVariable=$('#chart-container').orgchart({
-                    'data': '/Home/Init',
-                    'nodeTemplate': nodeTemplate,
-                    'ajaxURL': ajaxURLs,
-                    'nodeId': "Id",
-                    'nodeTitle': "Name",
-                    'zoom': 'true',
-                    'pan': 'true',
-                    'zoominLimit': 7,
-                    'zoomoutLimit': 0.5,
-                    'collapsed': false,
-                    'createNode': function ($node, data) {  
-                        
-                        var recenterx = function () {
+                var recenterxy = function () {
 
-                            var chart = $('.orgchart');
-                            var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
-                            chart.css('transform', 'translate(' + posX + 'px,0px)').css('transition-duration', '0.5s');
+                    var chart = $('.orgchart');
+                    var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
+                    var posy = chart.height() > chart.parent('div').height() ? -((chart.height() / 2)) : '0';
+                    chart.css('transform', 'translate(' + posX + 'px,' + posy + 'px)').css('transition-duration', '1s');
+                    chart.css('transition-duration', '0.5s');
 
-                        };
-                        var recenterxy = function () {
+                };
+                $node.find('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave', (function () {
+                    $(this).children('.card').toggleClass('flipped');
 
-                            var chart = $('.orgchart');
-                            var posX = chart.width() > chart.parent('div').width() ? -((chart.width() / 2) - (chart.parent('div').width() / 2)) : '0';
-                            var posy = chart.height() > chart.parent('div').height() ? -((chart.height() / 2)) : '0';
-                            chart.css('transform', 'translate(' + posX + 'px,' + posy + 'px)').css('transition-duration', '1s');
-                            chart.css('transition-duration', '0.5s');
+                }
+                ));
 
-                        };
-                        $node.find('.flipcontainer').off('mouseenter mouseleave').on('mouseenter mouseleave', (function () {
-                            $(this).children('.card').toggleClass('flipped');
-                            
-                        }
-                        ));
-                        
-                        $node.find('.horizontalEdge').off("click").on("click", function () {
-                            setTimeout(recenterxy, 800);
-                        });
-                        $node.find('.horizontalEdge').off("click").on("click", function () {
-                            setTimeout(recenterxy, 800);
-                        });
-                        $node.find('.topEdge ').off("click").on("click", function () {
-                            setTimeout(recenterx, 800);
-                        });
-                        $node.find('.bottomEdge ').off("click").on("click", function () {
-                            setTimeout(recenterxy, 800);
-                        });
-                        
-                    },
-                    'initCompleted': recenterx
-
+                $node.find('.horizontalEdge').off("click").on("click", function () {
+                    setTimeout(recenterxy, 800);
                 });
-                
-                
-            });
+                $node.find('.horizontalEdge').off("click").on("click", function () {
+                    setTimeout(recenterxy, 800);
+                });
+                $node.find('.topEdge ').off("click").on("click", function () {
+                    setTimeout(recenterx, 800);
+                });
+                $node.find('.bottomEdge ').off("click").on("click", function () {
+                    setTimeout(recenterxy, 800);
+                });
+
+            },
+            'initCompleted': recenterx
+
+        });
 
 
-        </script>
+    });
+
+
+</script>

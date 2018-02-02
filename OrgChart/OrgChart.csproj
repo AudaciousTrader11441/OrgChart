@@ -186,8 +186,14 @@
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\11152.jpg" />
+    <Content Include="Images\11184.jpg" />
     <Content Include="Images\11358.jpg" />
+    <Content Include="Images\11765.jpg" />
+    <Content Include="Images\11767.jpg" />
+    <Content Include="Images\12751.jpg" />
     <Content Include="Images\person.png" />
+    <Content Include="Images\Logo.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -233,6 +239,7 @@
     <Content Include="Scripts\jquery.orgchart.js" />
     <Content Include="Scripts\jquery.orgchart.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.slidereveal.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -280,6 +287,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Home\_Search.cshtml" />
+    <Content Include="Views\Home\_Tree.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

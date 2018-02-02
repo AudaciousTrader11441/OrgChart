@@ -191,6 +191,32 @@ namespace OrgChart.Models
 
 
         }
+        //child nodes for tree
+        public static List<EmployeeTree> GetTreeChild(int managerId)
+        {
+            List<EmployeeTree> res = new List<EmployeeTree>();
+            SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SqlDB"].ConnectionString);
+            using (con)
+            {
+                DataSet ds = new DataSet();
+                SqlCommand cmd = new SqlCommand("sp_Tree_Child", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Employee_id", managerId));
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+                var x = ds.Tables[0].Rows.Count;
+                if (x == 0)
+                {
+                    EmployeeTree blank = new EmployeeTree() { Id = 0, Name = "No Employe",Reporties=0 };
+                    res.Add(blank);
+                    return res;
+                }
+                return ds.Tables[0].ToList<EmployeeTree>();
+
+            }
+
+
+        }
 
 
     }

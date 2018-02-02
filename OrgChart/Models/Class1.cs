@@ -167,4 +167,18 @@ set @relationship = 000
 
 return @relationship
 end
+
+alter procedure sp_Tree_Child
+@Employee_id int
+as
+begin
+if @Employee_id != 10000
+select EmployeeId as Id ,CONCAT(FirstName,' ', MiddleName,' ', LastName) as Name,
+dbo.fn_countofsub(EmployeeId) as Reporties 
+from Employee where ManagerEmployeeCode=@Employee_id and Active='True' and RoleName<>'CEO';
+else
+select EmployeeId as Id ,CONCAT(FirstName,' ', MiddleName,' ', LastName) as Name,
+dbo.fn_countofsub(EmployeeId) as Reporties 
+from Employee where ManagerEmployeeCode=10001 and Active='True' and RoleName='CEO';
+end
 */
